@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LUXE HAVEN | The Ultimate Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@200;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --black: #050505;
+            --dark: #121212;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --transition: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+
+        /* Scroll Progress Bar */
+        #progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: var(--gold); z-index: 2000; transition: 0.1s;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed; width: 100%; top: 0; padding: 40px 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; transition: 0.5s var(--transition);
+        }
+        nav.scrolled { background: rgba(0,0,0,0.9); padding: 20px 8%; backdrop-filter: blur(10px); }
+        .logo { font-family: 'Bodoni Moda', serif; font-size: 2.2rem; letter-spacing: 8px; color: var(--gold); font-weight: 900; }
+
+        /* Hero with Parallax */
+        .hero {
+            height: 100vh; overflow: hidden; position: relative;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 120%;
+            background: linear-gradient(rgba(0,0,0,0.4), var(--black)), 
+                        url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80') center/cover;
+            z-index: -1; transform: translateY(0); transition: 0.1s linear;
+        }
+        .hero h1 { font-family: 'Bodoni Moda', serif; font-size: clamp(3.5rem, 12vw, 9rem); font-style: italic; margin-bottom: 10px; opacity: 0; transform: translateY(30px); animation: fadeUp 1s forwards 0.5s; }
+        .hero p { letter-spacing: 12px; color: var(--gold); text-transform: uppercase; font-size: 0.8rem; margin-bottom: 40px; opacity: 0; animation: fadeIn 1.5s forwards 1s; }
+
+        /* Pricing Section */
+        section { padding: 140px 8%; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
+        
+        .price-card {
+            background: var(--dark); border-radius: 20px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.5s var(--transition);
+            cursor: pointer; position: relative;
+        }
+        .price-card:hover { border-color: var(--gold); transform: scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .price-card.active { border-color: var(--gold); background: #1a1a1a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
+        
+        .card-img { width: 100%; height: 300px; overflow: hidden; position: relative; }
+        .card-img img { width: 100%; height: 100%; object-fit: cover; transition: 1.5s var(--transition); filter: grayscale(40%) brightness(0.7); }
+        .price-card:hover .card-img img { filter: grayscale(0%) brightness(1); transform: scale(1.1); }
+
+        .card-content { padding: 40px; text-align: center; }
+        .amount { font-size: 3rem; font-weight: 200; color: var(--gold); margin: 20px 0; font-family: 'Bodoni Moda'; }
+        
+        /* Interactive Payment UI */
+        .payment-shell {
+            margin-top: 100px; background: var(--glass); border-radius: 30px;
+            padding: 60px; border: 1px solid rgba(255,255,255,0.08);
+            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px;
+            opacity: 0; transform: translateY(40px); transition: 1s var(--transition);
+        }
+        .payment-shell.visible { opacity: 1; transform: translateY(0); }
+
+        .lux-table { width: 100%; border-collapse: collapse; }
+        .lux-table th { text-align: left; padding: 15px; color: var(--gold); font-size: 0.7rem; letter-spacing: 3px; border-bottom: 1px solid var(--gold); }
+        .lux-table td { padding: 25px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+
+        .form-input { margin-bottom: 30px; position: relative; }
+        .form-input input {
+            width: 100%; background: transparent; border: none; 
+            border-bottom: 1px solid #333; color: white; padding: 12px 0;
+            font-size: 1rem; outline: none; transition: 0.4s;
+        }
+        .form-input label { position: absolute; top: 12px; left: 0; color: #666; pointer-events: none; transition: 0.4s; font-size: 0.8rem; letter-spacing: 1px; }
+        .form-input input:focus ~ label, .form-input input:valid ~ label { top: -15px; color: var(--gold); font-size: 0.6rem; }
+        .form-input input:focus { border-color: var(--gold); }
+
+        .btn-confirm {
+            width: 100%; padding: 20px; background: transparent; border: 1px solid var(--gold);
+            color: var(--gold); text-transform: uppercase; letter-spacing: 4px; 
+            cursor: pointer; transition: 0.5s; font-size: 0.8rem; overflow: hidden; position: relative;
+        }
+        .btn-confirm:hover { background: var(--gold); color: black; box-shadow: 0 0 40px rgba(212,175,55,0.3); }
+
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        @media (max-width: 1000px) {
+            .payment-shell { grid-template-columns: 1fr; padding: 30px; }
+            nav { padding: 20px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav id="navbar">
+    <div class="logo">LUXE</div>
+    <div style="font-size: 0.7rem; letter-spacing: 3px; color: var(--gold);">BOOKING PORTAL</div>
+</nav>
+
+<div class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <p>The Epitome of Grace</p>
+    <h1>Pure Elegance</h1>
+</div>
+
+<section id="pricing">
+    <div class="pricing-grid">
+        <div class="price-card" onclick="updateSelection('Executive Suite', 850, this)">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80" alt="Suite">
+            </div>
+            <div class="card-content">
+                <h3>Executive</h3>
+                <div class="amount">$850</div>
+                <p style="color: #888; font-size: 0.8rem; margin-bottom: 20px;">City Lights & Urban Sophistication</p>
+                <div class="btn-confirm" style="padding: 10px;">Select</div>
+            </div>
+        </div>
+
+        <div class="price-card active" onclick="updateSelection('Royal Penthouse', 1500, this)">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80" alt="Penthouse">
+            </div>
+            <div class="card-content">
+                <h3>Penthouse</h3>
+                <div class="amount">$1,500</div>
+                <p style="color: #888; font-size: 0.8rem; margin-bottom: 20px;">Infinite Horizons & Butler Service</p>
+                <div class="btn-confirm" style="padding: 10px;">Select</div>
+            </div>
+        </div>
+
+        <div class="price-card" onclick="updateSelection('Imperial Villa', 2800, this)">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80" alt="Villa">
+            </div>
+            <div class="card-content">
+                <h3>Imperial</h3>
+                <div class="amount">$2,800</div>
+                <p style="color: #888; font-size: 0.8rem; margin-bottom: 20px;">Secluded Shores & Private Cinema</p>
+                <div class="btn-confirm" style="padding: 10px;">Select</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-shell visible" id="checkout">
+        <div class="details">
+            <h2 style="font-family: 'Bodoni Moda'; font-size: 2.5rem; margin-bottom: 30px;">Your Itinerary</h2>
+            <table class="lux-table">
+                <tr><th>SELECTED SUITE</th><td id="res-name" style="letter-spacing: 2px;">Royal Penthouse</td></tr>
+                <tr><th>NIGHTLY RATE</th><td id="res-price">$1,500</td></tr>
+                <tr><th>SERVICE LUXE</th><td>$200</td></tr>
+                <tr><th style="border:none">GRAND TOTAL</th><td id="res-total" style="color: var(--gold); font-size: 1.5rem; border:none; font-weight: 700;">$1,700</td></tr>
+            </table>
+        </div>
+
+        <div class="form-container">
+            <div class="form-input">
+                <input type="text" required>
+                <label>GUEST FULL NAME</label>
+            </div>
+            <div class="form-input">
+                <input type="text" required>
+                <label>SECURE PAYMENT KEY</label>
+            </div>
+            <button class="btn-confirm" onclick="triggerSuccess()">Finalize Reservation</button>
+        </div>
+    </div>
+</section>
+
+<script>
+    // 1. Scroll Progress & Parallax
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById("progress").style.width = scrolled + "%";
+
+        const navbar = document.getElementById('navbar');
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+
+        // Parallax Effect
+        const bg = document.getElementById('heroBg');
+        bg.style.transform = `translateY(${window.scrollY * 0.4}px)`;
+    });
+
+    // 2. Selection Update
+    function updateSelection(name, price, el) {
+        // Animation update
+        const tableData = document.querySelectorAll('.lux-table td');
+        tableData.forEach(td => td.style.opacity = '0');
+        
+        setTimeout(() => {
+            document.getElementById('res-name').innerText = name;
+            document.getElementById('res-price').innerText = `$${price.toLocaleString()}`;
+            document.getElementById('res-total').innerText = `$${(price + 200).toLocaleString()}`;
+            tableData.forEach(td => td.style.opacity = '1');
+        }, 300);
+
+        // UI active states
+        document.querySelectorAll('.price-card').forEach(card => card.classList.remove('active'));
+        el.classList.add('active');
+
+        // Scroll to checkout
+        document.getElementById('checkout').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // 3. Success Interaction
+    function triggerSuccess() {
+        const btn = event.target;
+        btn.innerText = "RESERVING...";
+        setTimeout(() => {
+            btn.style.background = "#d4af37";
+            btn.style.color = "black";
+            btn.innerText = "RESERVATION SECURED";
+            alert("A confirmation for your " + document.getElementById('res-name').innerText + " has been sent.");
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>
