@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yabets | Portfolio</title>
+  <link rel="icon" href="pencil.ico">
+  <style>
+    :root {
+      --primary: #11999E;
+      --secondary: #0984e3;
+      --accent: #ff4757;
+      --dark: #2d3436;
+      --light: #f5fcfc;
+      --glass: rgba(255, 255, 255, 0.8);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* --- Navigation --- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 10%;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -1px;
+    }
+
+    nav a {
+      margin-left: 25px;
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background: var(--primary);
+      transition: 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at top right, #dff9fb, #ffffff);
+      padding: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 900;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, var(--dark), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero h2 {
+      font-size: 1.5rem;
+      color: #636e72;
+      margin-bottom: 20px;
+    }
+
+    .typing-text {
+      color: var(--primary);
+      font-weight: bold;
+      border-right: 3px solid var(--primary);
+      padding-right: 5px;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink { 50% { border-color: transparent } }
+
+    /* --- Sections General --- */
+    section {
+      padding: 100px 10%;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    section.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- Profile --- */
+    .profile img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      background: var(--primary);
+      margin-bottom: 30px;
+      border: 5px solid white;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      animation: morph 8s ease-in-out infinite;
+    }
+
+    @keyframes morph {
+      0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+      50% { border-radius: 50% 50% 20% 80% / 25% 80% 20% 75%; }
+      100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    }
+
+    /* --- Skills Grid --- */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .skill-card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid #eee;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border-color: var(--primary);
+    }
+
+    /* --- Contact --- */
+    .contact-btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 18px 45px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 10px 20px rgba(17, 153, 158, 0.3);
+      transition: 0.3s;
+    }
+
+    .contact-btn:hover {
+      background: var(--secondary);
+      transform: scale(1.05) translateY(-3px);
+    }
+
+    /* --- Scroll Top --- */
+    .scroll-top {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      background: var(--dark);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.3s;
+      z-index: 1000;
+    }
+
+    .scroll-top.visible {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      header { padding: 1rem 5%; }
+      section { padding: 60px 5%; }
+      .hero h1 { font-size: 2.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">YB.</div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero reveal">
+    <h1>I'm Yabets</h1>
+    <h2>Professional <span class="typing-text"></span></h2>
+    <p>Crafting digital experiences through code.</p>
+  </section>
+
+  <section class="profile" id="about" style="text-align: center;">
+    <img src="fake pple.png" alt="Yabets Profile">
+    <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Hello, I'm Yabets 👋</h2>
+    <p style="max-width: 700px; margin: 0 auto; color: #636e72; font-size: 1.1rem;">
+      I am a passionate developer specializing in building <strong>Web Ecosystems</strong>, 
+      <strong>Android Applications</strong>, and high-performance software. 
+      When I'm not coding, I'm analyzing game mechanics or dreaming of the perfect M-series BMW.
+    </p>
+  </section>
+
+  <section class="skills" id="skills">
+    <h2 style="text-align: center; font-size: 2.2rem;">Core Expertise</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h3 style="color: var(--primary); margin-bottom: 15px;">Full-Stack Dev</h3>
+        <p>Designing responsive, user-centric interfaces and robust backend architectures.</p>
+      </div>
+
+      <div class="skill-card">
+        <h3 style="color: var(--primary); margin-bottom: 15px;">Mobile Apps</h3>
+        <p>Developing native and cross-platform Android applications with clean UI/UX.</p>
+      </div>
+
+      <div class="skill-card">
+        <h3 style="color: var(--primary); margin-bottom: 15px;">Game Theory</h3>
+        <p>Exploring game development logic and competitive strategy implementation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" style="text-align: center; background: #fff;">
+    <h2>Let's Build Something Great</h2>
+    <p>Currently available for freelance projects and collaborations.</p>
+    <a href="yabetskinde@gmail.com" class="contact-btn">Start a Project</a>
+  </section>
+
+  <footer style="background: var(--dark); color: white; padding: 50px 10%; text-align: center;">
+    <div style="margin-bottom: 20px;">
+      <a href="#" style="color: white; margin: 0 15px; text-decoration: none; opacity: 0.8;">LinkedIn</a>
+      <a href="#" style="color: white; margin: 0 15px; text-decoration: none; opacity: 0.8;">GitHub</a>
+      <a href="#" style="color: white; margin: 0 15px; text-decoration: none; opacity: 0.8;">Twitter</a>
+    </div>
+    <p style="font-size: 0.9rem; opacity: 0.6;">&copy; 2026 Yabets | Developed with Precision</p>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop">▲</button>
+
+  <script>
+    // 1. Improved Typing Effect
+    const words = ["Web Developer", "App Architect", "Software Engineer"];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typingSpan = document.querySelector('.typing-text');
+
+    function type() {
+      const currentWord = words[wordIndex];
+      if (isDeleting) {
+        typingSpan.textContent = currentWord.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typingSpan.textContent = currentWord.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let typeSpeed = isDeleting ? 50 : 150;
+
+      if (!isDeleting && charIndex === currentWord.length) {
+        isDeleting = true;
+        typeSpeed = 2000; // Pause at end
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        typeSpeed = 500;
+      }
+
+      setTimeout(type, typeSpeed);
+    }
+
+    // 2. Reveal Sections on Scroll
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('section').forEach(section => {
+      observer.observe(section);
+    });
+
+    // 3. Scroll to Top Logic
+    const scrollBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    });
+
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => type());
+  </script>
+</body>
+</html>
